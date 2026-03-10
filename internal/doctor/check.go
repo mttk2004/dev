@@ -4,7 +4,6 @@ import (
 	"fmt"
 
 	"dev/internal/registry"
-	"dev/internal/system"
 	"dev/internal/updater"
 
 	"github.com/charmbracelet/lipgloss"
@@ -30,34 +29,16 @@ func RunChecks() Report {
 	var results []CheckResult
 
 	for _, pkg := range registry.Packages {
-		passed := pkg.IsInstalled()
-		var msg string
+		passed := pkg.IsFullyOperational()
+		msg := pkg.DiagnosticMessage()
+
 		var version string
 		var path string
 
-		if passed {
-			if pkg.ID == "node" {
-				if system.CommandExists("node") {
-					msg = "fnm and node are installed and in PATH"
-					version = system.GetCommandVersion("node")
-					path = system.GetCommandPath("node")
-				} else {
-					passed = false
-					msg = "fnm is installed, but node is not in PATH. Try restarting your terminal."
-					version = pkg.GetVersion()
-					path = pkg.GetPath()
-				}
-			} else {
-				msg = fmt.Sprintf("%s is installed and in PATH", pkg.CheckCmd)
-				version = pkg.GetVersion()
-				path = pkg.GetPath()
-			}
+		if pkg.IsInstalled() {
+			version = pkg.GetVersion()
+			path = pkg.GetPath()
 		} else {
-			if pkg.ID == "bun" && system.HasEnvVarInZshrc("BUN_INSTALL") {
-				msg = "BUN_INSTALL is in .zshrc, but bun is not in PATH. Try restarting your terminal."
-			} else {
-				msg = fmt.Sprintf("%s is missing or not in PATH. Run 'dev install %s'.", pkg.CheckCmd, pkg.ID)
-			}
 			version = "-"
 			path = "-"
 		}

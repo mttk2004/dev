@@ -5,6 +5,7 @@ import (
 	"os"
 	"os/exec"
 	"path/filepath"
+	"strings"
 
 	"dev/internal/system"
 )
@@ -13,9 +14,9 @@ import (
 type ProjectType string
 
 const (
-	ProjectNextJS    ProjectType = "nextjs"
-	ProjectLaravel   ProjectType = "laravel"
-	ProjectGoAPI     ProjectType = "go-api"
+	ProjectNextJS      ProjectType = "nextjs"
+	ProjectLaravel     ProjectType = "laravel"
+	ProjectGoAPI       ProjectType = "go-api"
 	ProjectReactVite   ProjectType = "react-vite"
 	ProjectVueVite     ProjectType = "vue-vite"
 	ProjectExpress     ProjectType = "express"
@@ -23,6 +24,51 @@ const (
 	ProjectSpringBoot  ProjectType = "spring-boot"
 	ProjectReactRouter ProjectType = "react-router"
 )
+
+// SafeBaseDirs returns the list of directories that are considered safe roots
+// for project scaffolding. A resolved path must be under one of these.
+func SafeBaseDirs() []string {
+	dirs := []string{}
+
+	// Current working directory is always safe
+	if cwd, err := os.Getwd(); err == nil {
+		dirs = append(dirs, cwd)
+	}
+
+	// Home directory is always safe
+	if home, err := os.UserHomeDir(); err == nil {
+		dirs = append(dirs, home)
+	}
+
+	return dirs
+}
+
+// ValidatePath checks that the resolved fullPath lives under one of the safe
+// base directories. This prevents path traversal attacks like "../../etc".
+func ValidatePath(fullPath string) error {
+	resolved, err := filepath.Abs(filepath.Clean(fullPath))
+	if err != nil {
+		return fmt.Errorf("failed to resolve path '%s': %v", fullPath, err)
+	}
+
+	for _, base := range SafeBaseDirs() {
+		absBase, err := filepath.Abs(filepath.Clean(base))
+		if err != nil {
+			continue
+		}
+		// Ensure the base ends with separator for proper prefix matching
+		// e.g. /home/user must not match /home/username
+		baseWithSep := absBase + string(filepath.Separator)
+		if resolved == absBase || strings.HasPrefix(resolved, baseWithSep) {
+			return nil
+		}
+	}
+
+	return fmt.Errorf(
+		"unsafe path: '%s' is outside allowed directories (home dir or current working directory)",
+		resolved,
+	)
+}
 
 // CreateProject scaffolds a new project of the given type with the given name in the specified parent directory.
 func CreateProject(pType ProjectType, parentDir, name string) error {
@@ -33,7 +79,19 @@ func CreateProject(pType ProjectType, parentDir, name string) error {
 		parentDir = "." // Default to current directory
 	}
 
-	fullPath := filepath.Join(parentDir, name)
+	// Sanitize parentDir: resolve symlinks and clean traversal segments
+	cleanParent := filepath.Clean(parentDir)
+	absParent, err := filepath.Abs(cleanParent)
+	if err != nil {
+		return fmt.Errorf("failed to resolve parent directory '%s': %v", parentDir, err)
+	}
+
+	fullPath := filepath.Join(absParent, name)
+
+	// Validate that the resolved path is within safe boundaries
+	if err := ValidatePath(fullPath); err != nil {
+		return err
+	}
 
 	// Ensure the target directory does not already exist
 	if _, err := os.Stat(fullPath); !os.IsNotExist(err) {
@@ -41,29 +99,29 @@ func CreateProject(pType ProjectType, parentDir, name string) error {
 	}
 
 	// Ensure the parent directory exists
-	if err := os.MkdirAll(parentDir, 0755); err != nil {
+	if err := os.MkdirAll(absParent, 0755); err != nil {
 		return fmt.Errorf("failed to create parent directory: %v", err)
 	}
 
 	switch pType {
 	case ProjectNextJS:
-		return scaffoldNextJS(parentDir, name)
+		return scaffoldNextJS(absParent, name)
 	case ProjectLaravel:
-		return scaffoldLaravel(parentDir, name)
+		return scaffoldLaravel(absParent, name)
 	case ProjectGoAPI:
-		return scaffoldGoAPI(parentDir, name)
+		return scaffoldGoAPI(absParent, name)
 	case ProjectReactVite:
-		return scaffoldReactVite(parentDir, name)
+		return scaffoldReactVite(absParent, name)
 	case ProjectVueVite:
-		return scaffoldVueVite(parentDir, name)
+		return scaffoldVueVite(absParent, name)
 	case ProjectExpress:
-		return scaffoldExpress(parentDir, name)
+		return scaffoldExpress(absParent, name)
 	case ProjectDjango:
-		return scaffoldDjango(parentDir, name)
+		return scaffoldDjango(absParent, name)
 	case ProjectSpringBoot:
-		return scaffoldSpringBoot(parentDir, name)
+		return scaffoldSpringBoot(absParent, name)
 	case ProjectReactRouter:
-		return scaffoldReactRouter(parentDir, name)
+		return scaffoldReactRouter(absParent, name)
 	default:
 		return fmt.Errorf("unsupported project type: %s", pType)
 	}

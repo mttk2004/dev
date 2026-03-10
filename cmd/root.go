@@ -17,16 +17,6 @@ import (
 	"github.com/spf13/cobra"
 )
 
-// getPackageByID retrieves a package from the registry by its ID
-func getPackageByID(id string) (*registry.Package, error) {
-	for _, p := range registry.Packages {
-		if p.ID == id {
-			return &p, nil
-		}
-	}
-	return nil, fmt.Errorf("package %s not found", id)
-}
-
 // rootCmd represents the base command when called without any subcommands
 var rootCmd = &cobra.Command{
 	Use:   "dev",
@@ -40,11 +30,8 @@ Just run 'dev' to launch the interactive dashboard!`,
 		// Start async update check in the background
 		updater.StartAsyncCheck()
 
-		// Dynamically build choices from the registry
-		var choices []string
-		for _, p := range registry.Packages {
-			choices = append(choices, p.ID)
-		}
+		// Build choices dynamically from the registry — no hardcoded IDs
+		choices := registry.IDs()
 
 		for {
 			// Clear screen before each iteration to keep it fresh and update the doctor report
@@ -73,8 +60,9 @@ Just run 'dev' to launch the interactive dashboard!`,
 					continue
 				}
 				for _, pkgID := range selected {
-					p, err := getPackageByID(pkgID)
+					p, err := registry.LookupByID(pkgID)
 					if err != nil {
+						fmt.Printf("⚠️  %v\n", err)
 						continue
 					}
 					fmt.Printf("\n📦 Installing %s...\n", p.DisplayName)
@@ -92,8 +80,9 @@ Just run 'dev' to launch the interactive dashboard!`,
 					continue
 				}
 				for _, pkgID := range selected {
-					p, err := getPackageByID(pkgID)
+					p, err := registry.LookupByID(pkgID)
 					if err != nil {
+						fmt.Printf("⚠️  %v\n", err)
 						continue
 					}
 					fmt.Printf("\n🔄 Updating %s...\n", p.DisplayName)
@@ -111,8 +100,9 @@ Just run 'dev' to launch the interactive dashboard!`,
 					continue
 				}
 				for _, pkgID := range selected {
-					p, err := getPackageByID(pkgID)
+					p, err := registry.LookupByID(pkgID)
 					if err != nil {
+						fmt.Printf("⚠️  %v\n", err)
 						continue
 					}
 					fmt.Printf("\n🧹 Uninstalling %s...\n", p.DisplayName)
