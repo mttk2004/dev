@@ -1,90 +1,63 @@
 # 🚀 dev - Web Development Environment Manager
 
-`dev` is a professional, blazing-fast Command Line Interface (CLI) tool written in Go, specifically designed to automate the tedious tasks of setting up and managing web development environments on **Arch Linux** (with **Zsh**).
+`dev` is a blazing-fast, interactive Terminal User Interface (TUI) tool written in Go. It is designed to automate the tedious tasks of setting up and managing web development environments on **Arch Linux** (with **Zsh**).
 
-Instead of manually running `pacman`, writing `curl` scripts, or editing your `~/.zshrc` file to fix `$PATH` issues, `dev` handles everything for you behind a beautiful interactive Terminal User Interface (TUI).
+**The Philosophy:** Zero subcommands to memorize. Forget `install`, `update`, or `doctor` arguments. Just type `dev` and let the unified interactive dashboard handle the rest.
 
 ## ✨ Features
 
-- **Interactive TUI:** Select packages to install using a beautiful, keyboard-driven checklist.
-- **Automated Configuration:** Automatically injects necessary environment variables (like `BUN_INSTALL` and `fnm env`) into your `~/.zshrc`.
-- **Node.js Version Management:** Installs and configures Node.js using `fnm` (Fast Node Manager) by default, allowing you to easily switch between Node versions.
-- **System Diagnostics:** Includes a built-in `doctor` command to scan your system for missing dependencies and `$PATH` misconfigurations.
-- **Bulk Actions:** Update or clean all your development tools with a single command.
+- **One-Command Dashboard:** Run `dev` to open a centralized control panel for your entire dev machine.
+- **Smart Diagnostics:** Instantly see installed tools, their versions, paths, and `$PATH` misconfigurations in a beautiful auto-sizing table.
+- **Package Management:** Install, update, or uninstall dev tools using a keyboard-driven checklist. Automatically detects and uses AUR helpers (`yay` or `paru`) if available.
+- **Service Manager:** Start, stop, enable, or disable background services (`systemctl`) like Docker or PostgreSQL directly from the UI.
+- **Project Scaffolding:** Spin up new projects in seconds (Next.js, React, Vue, Express, Laravel, Django, Spring Boot, Go API) with automated dependency isolation.
+- **Automated `$PATH`:** Automatically injects necessary environment variables into your `~/.zshrc`.
 
-## 📦 Supported Packages
+## 📦 Supported Stack
 
-- `node` (Installs `fnm` and the latest Node.js LTS)
-- `bun` (Installs via official script)
-- `composer` (PHP package manager)
-- `jdk` (Java Development Kit - OpenJDK)
-- `go` (Go programming language)
+- **Runtimes/Langs:** Node.js (via `fnm`), Bun, Go, PHP, Python, Java (JDK).
+- **Package Managers:** Composer, Maven.
+- **Databases/Cache:** PostgreSQL, MariaDB, Redis.
+- **DevOps/Servers:** Docker, Nginx.
 
 ## 🛠️ Prerequisites
 
-- **OS:** Arch Linux (relies on `pacman` for native packages).
-- **Shell:** Zsh (configuration logic targets `~/.zshrc`).
-- **Go:** Version 1.20+ (to build from source).
+- **OS:** Arch Linux.
+- **Shell:** Zsh.
+- **Go:** Version 1.21+ (to build from source).
 
 ## 🚀 Installation
-
-Clone the repository and build the binary:
 
 ```bash
 git clone https://github.com/yourusername/dev.git
 cd dev
 go mod tidy
 go build -o dev
-```
-
-Move the executable to your path (optional):
-```bash
 sudo mv dev /usr/local/bin/
 ```
 
 ## 📖 Usage
 
-### 1. Install Packages
-You can launch the interactive TUI to select multiple packages:
+Drop the CLI arguments. Just run:
+
 ```bash
-dev install
-```
-Or install a specific package directly:
-```bash
-dev install node
-dev install bun
+dev
 ```
 
-### 2. Check System Health
-Run diagnostics to ensure all your tools are installed and correctly configured in your `$PATH`:
-```bash
-dev doctor
-```
-
-### 3. Update Packages
-Update a specific tool, or run without arguments to update your entire system (`pacman -Syu`) and all standalone tools (like Bun):
-```bash
-dev update
-dev update composer
-```
-
-### 4. Clean System Cache
-Uninstall a specific tool, or run without arguments to clear the `pacman` package cache:
-```bash
-dev clean
-dev clean jdk
-```
+From the interactive menu, you can navigate using your arrow keys and `Enter` to:
+1. **📦 Install packages** (Smartly filters out already installed tools).
+2. **🔄 Update packages** (Updates Arch packages & standalone tools).
+3. **🧹 Uninstall / Clean packages**
+4. **🔍 Search for a package** (Queries Pacman/AUR directly).
+5. **⚙️ Manage Services** (Toggle running states of local databases & servers).
+6. **✨ Create New Project** (Scaffold boilerplate for 9+ different frameworks).
 
 ## 📂 Project Structure
 
-This project follows the Standard Go Project Layout:
-- `cmd/`: Cobra CLI command definitions (`install`, `doctor`, `update`, `clean`).
-- `internal/pkgmanager/`: Tool-specific installation and update logic.
-- `internal/system/`: OS-level utilities for checking commands and modifying `~/.zshrc`.
-- `internal/doctor/`: System diagnostic and reporting logic.
-- `internal/tui/`: Bubble Tea and Lipgloss UI components (Spinners, Selectors).
-- `config/`: Viper configuration management (defaulting to `~/.dev.yaml`).
-
-## 🤝 Contributing
-
-Contributions, issues, and feature requests are welcome! Feel free to check the issues page.
+This project follows a clean Go architecture separating the UI from system logic:
+- `cmd/root.go`: The single entrypoint launching the TUI.
+- `internal/tui/`: Interactive UI components built with `charmbracelet/huh`.
+- `internal/pkgmanager/`: Arch-native package installation and AUR routing.
+- `internal/scaffold/`: Project template generation logic.
+- `internal/system/`: OS-level utilities (Zsh configs, systemctl, command detection).
+- `internal/doctor/`: System diagnostic and health reporting.
