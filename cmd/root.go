@@ -4,6 +4,7 @@ import (
 	"bufio"
 	"fmt"
 	"os"
+	"time"
 
 	"dev/internal/doctor"
 	"dev/internal/pkgmanager"
@@ -11,6 +12,7 @@ import (
 	"dev/internal/scaffold"
 	"dev/internal/system"
 	"dev/internal/tui"
+	"dev/internal/updater"
 
 	"github.com/spf13/cobra"
 )
@@ -35,6 +37,9 @@ updating, and managing packages and services.
 
 Just run 'dev' to launch the interactive dashboard!`,
 	Run: func(cmd *cobra.Command, args []string) {
+		// Start async update check in the background
+		updater.StartAsyncCheck()
+
 		// Dynamically build choices from the registry
 		var choices []string
 		for _, p := range registry.Packages {
@@ -44,6 +49,9 @@ Just run 'dev' to launch the interactive dashboard!`,
 		for {
 			// Clear screen before each iteration to keep it fresh and update the doctor report
 			fmt.Print("\033[H\033[2J")
+
+			// Wait briefly for update check to complete (non-blocking after timeout)
+			updater.WaitForResult(3 * time.Second)
 
 			// 1. Run Doctor Check and print the table report
 			report := doctor.RunChecks()

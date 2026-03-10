@@ -5,6 +5,7 @@ import (
 
 	"dev/internal/registry"
 	"dev/internal/system"
+	"dev/internal/updater"
 
 	"github.com/charmbracelet/lipgloss"
 	"github.com/charmbracelet/lipgloss/table"
@@ -75,7 +76,7 @@ func RunChecks() Report {
 
 // Print outputs the report to the console in a readable format using a lipgloss table.
 func (r Report) Print() {
-	fmt.Println("\n🩺 System Diagnostics Report:\n")
+	fmt.Print("\n🩺 System Diagnostics Report:\n\n")
 
 	t := table.New().
 		Border(lipgloss.RoundedBorder()).
@@ -129,5 +130,21 @@ func (r Report) Print() {
 	} else {
 		fmt.Println("\n⚠️  " + lipgloss.NewStyle().Foreground(lipgloss.Color("214")).Bold(true).Render("Some issues were found. Please review the ERR items above."))
 	}
+
+	// Show update notification if a newer version is available
+	if notification := updater.FormatNotification(); notification != "" {
+		updateStyle := lipgloss.NewStyle().
+			Foreground(lipgloss.Color("228")).
+			Italic(true)
+		fmt.Println(updateStyle.Render(notification))
+		info := updater.GetUpdateInfo()
+		if info != nil && info.ReleaseURL != "" {
+			linkStyle := lipgloss.NewStyle().
+				Foreground(lipgloss.Color("240")).
+				Italic(true)
+			fmt.Println(linkStyle.Render("   " + info.ReleaseURL))
+		}
+	}
+
 	fmt.Println()
 }
