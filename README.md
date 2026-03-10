@@ -29,7 +29,7 @@
 ## 🚀 Installation
 
 ```bash
-git clone https://github.com/yourusername/dev.git
+git clone https://github.com/mttk2004/dev.git
 cd dev
 go mod tidy
 go build -o dev

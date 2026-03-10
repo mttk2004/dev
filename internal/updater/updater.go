@@ -18,7 +18,7 @@ import (
 const (
 	// GitHubRepo is the owner/repo for checking releases.
 	// Update this to match your actual GitHub repository.
-	GitHubRepo = "kietdev/dev"
+	GitHubRepo = "mttk2004/dev"
 
 	// githubAPIURL is the endpoint for fetching the latest release.
 	githubAPIURL = "https://api.github.com/repos/%s/releases/latest"
