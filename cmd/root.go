@@ -7,12 +7,23 @@ import (
 
 	"dev/internal/doctor"
 	"dev/internal/pkgmanager"
+	"dev/internal/registry"
 	"dev/internal/scaffold"
 	"dev/internal/system"
 	"dev/internal/tui"
 
 	"github.com/spf13/cobra"
 )
+
+// getPackageByID retrieves a package from the registry by its ID
+func getPackageByID(id string) (*registry.Package, error) {
+	for _, p := range registry.Packages {
+		if p.ID == id {
+			return &p, nil
+		}
+	}
+	return nil, fmt.Errorf("package %s not found", id)
+}
 
 // rootCmd represents the base command when called without any subcommands
 var rootCmd = &cobra.Command{
@@ -24,7 +35,11 @@ updating, and managing packages and services.
 
 Just run 'dev' to launch the interactive dashboard!`,
 	Run: func(cmd *cobra.Command, args []string) {
-		choices := []string{"jdk", "composer", "node", "bun", "go", "php", "docker", "postgresql", "redis", "nginx", "python", "maven", "mariadb"}
+		// Dynamically build choices from the registry
+		var choices []string
+		for _, p := range registry.Packages {
+			choices = append(choices, p.ID)
+		}
 
 		for {
 			// Clear screen before each iteration to keep it fresh and update the doctor report
@@ -49,12 +64,16 @@ Just run 'dev' to launch the interactive dashboard!`,
 				if err != nil || len(selected) == 0 {
 					continue
 				}
-				for _, pkg := range selected {
-					fmt.Printf("\n📦 Installing %s...\n", pkg)
-					if err := pkgmanager.Install(pkg); err != nil {
-						fmt.Printf("❌ Failed to install %s: %v\n", pkg, err)
+				for _, pkgID := range selected {
+					p, err := getPackageByID(pkgID)
+					if err != nil {
+						continue
+					}
+					fmt.Printf("\n📦 Installing %s...\n", p.DisplayName)
+					if err := p.Install(); err != nil {
+						fmt.Printf("❌ Failed to install %s: %v\n", p.DisplayName, err)
 					} else {
-						fmt.Printf("✅ Successfully installed %s!\n", pkg)
+						fmt.Printf("✅ Successfully installed %s!\n", p.DisplayName)
 					}
 				}
 				actionTaken = true
@@ -64,12 +83,16 @@ Just run 'dev' to launch the interactive dashboard!`,
 				if err != nil || len(selected) == 0 {
 					continue
 				}
-				for _, pkg := range selected {
-					fmt.Printf("\n🔄 Updating %s...\n", pkg)
-					if err := pkgmanager.Update(pkg); err != nil {
-						fmt.Printf("❌ Failed to update %s: %v\n", pkg, err)
+				for _, pkgID := range selected {
+					p, err := getPackageByID(pkgID)
+					if err != nil {
+						continue
+					}
+					fmt.Printf("\n🔄 Updating %s...\n", p.DisplayName)
+					if err := p.Update(); err != nil {
+						fmt.Printf("❌ Failed to update %s: %v\n", p.DisplayName, err)
 					} else {
-						fmt.Printf("✅ Successfully updated %s!\n", pkg)
+						fmt.Printf("✅ Successfully updated %s!\n", p.DisplayName)
 					}
 				}
 				actionTaken = true
@@ -79,12 +102,16 @@ Just run 'dev' to launch the interactive dashboard!`,
 				if err != nil || len(selected) == 0 {
 					continue
 				}
-				for _, pkg := range selected {
-					fmt.Printf("\n🧹 Uninstalling %s...\n", pkg)
-					if err := pkgmanager.Remove(pkg); err != nil {
-						fmt.Printf("❌ Failed to uninstall %s: %v\n", pkg, err)
+				for _, pkgID := range selected {
+					p, err := getPackageByID(pkgID)
+					if err != nil {
+						continue
+					}
+					fmt.Printf("\n🧹 Uninstalling %s...\n", p.DisplayName)
+					if err := p.Remove(); err != nil {
+						fmt.Printf("❌ Failed to uninstall %s: %v\n", p.DisplayName, err)
 					} else {
-						fmt.Printf("✅ Successfully uninstalled %s!\n", pkg)
+						fmt.Printf("✅ Successfully uninstalled %s!\n", p.DisplayName)
 					}
 				}
 				actionTaken = true

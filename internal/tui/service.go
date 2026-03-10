@@ -3,21 +3,11 @@ package tui
 import (
 	"fmt"
 
+	"dev/internal/registry"
 	"dev/internal/system"
 
 	"github.com/charmbracelet/huh"
 )
-
-var trackedServices = []struct {
-	Name    string
-	CmdName string // The command to check if it's installed
-}{
-	{"docker", "docker"},
-	{"postgresql", "psql"},
-	{"redis", "redis-cli"},
-	{"nginx", "nginx"},
-	{"mariadb", "mariadb"},
-}
 
 // RunServiceManager displays an interactive menu to start, stop, enable, or disable system services.
 func RunServiceManager() error {
@@ -25,26 +15,31 @@ func RunServiceManager() error {
 		var options []huh.Option[string]
 		hasInstalledServices := false
 
-		for _, srv := range trackedServices {
-			if !system.CommandExists(srv.CmdName) {
+		for _, pkg := range registry.Packages {
+			if len(pkg.Services) == 0 {
+				continue
+			}
+			if !pkg.IsInstalled() {
 				continue // Skip if not installed
 			}
-			hasInstalledServices = true
 
-			status := system.GetServiceStatus(srv.Name)
+			for _, srvName := range pkg.Services {
+				hasInstalledServices = true
+				status := system.GetServiceStatus(srvName)
 
-			activeIcon := "🔴"
-			if status.Active {
-				activeIcon = "🟢"
+				activeIcon := "🔴"
+				if status.Active {
+					activeIcon = "🟢"
+				}
+
+				enabledIcon := "[Disabled]"
+				if status.Enabled {
+					enabledIcon = "[Enabled]"
+				}
+
+				label := fmt.Sprintf("%s %-12s %s", activeIcon, srvName, enabledIcon)
+				options = append(options, huh.NewOption(label, srvName))
 			}
-
-			enabledIcon := "[Disabled]"
-			if status.Enabled {
-				enabledIcon = "[Enabled]"
-			}
-
-			label := fmt.Sprintf("%s %-12s %s", activeIcon, srv.Name, enabledIcon)
-			options = append(options, huh.NewOption(label, srv.Name))
 		}
 
 		if !hasInstalledServices {

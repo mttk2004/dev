@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"strings"
 
-	"dev/internal/system"
+	"dev/internal/registry"
 
 	"github.com/charmbracelet/huh"
 )
@@ -17,38 +17,32 @@ func RunSelector(action string, choices []string) ([]string, error) {
 	var availableOptions []huh.Option[string]
 	var unavailablePkgs []string
 
+	// Map choices to registry packages for easy lookup
+	pkgMap := make(map[string]registry.Package)
+	for _, p := range registry.Packages {
+		pkgMap[p.ID] = p
+	}
+
 	// Determine which packages are applicable based on the action
 	for _, choice := range choices {
-		cmdToCheck := choice
-
-		// Map package names to their actual executable names for checking
-		switch choice {
-		case "node":
-			// We use fnm to manage node
-			cmdToCheck = "fnm"
-		case "jdk":
-			cmdToCheck = "java"
-		case "postgresql":
-			cmdToCheck = "psql"
-		case "redis":
-			cmdToCheck = "redis-cli"
-		case "maven":
-			cmdToCheck = "mvn"
+		pkg, ok := pkgMap[choice]
+		if !ok {
+			continue // Skip unknown packages
 		}
 
-		isInstalled := system.CommandExists(cmdToCheck)
+		isInstalled := pkg.IsInstalled()
 
 		if action == "install" {
 			if isInstalled {
-				unavailablePkgs = append(unavailablePkgs, choice)
+				unavailablePkgs = append(unavailablePkgs, pkg.DisplayName)
 			} else {
-				availableOptions = append(availableOptions, huh.NewOption(choice, choice))
+				availableOptions = append(availableOptions, huh.NewOption(pkg.DisplayName, pkg.ID))
 			}
 		} else if action == "update" || action == "uninstall" {
 			if isInstalled {
-				availableOptions = append(availableOptions, huh.NewOption(choice, choice))
+				availableOptions = append(availableOptions, huh.NewOption(pkg.DisplayName, pkg.ID))
 			} else {
-				unavailablePkgs = append(unavailablePkgs, choice)
+				unavailablePkgs = append(unavailablePkgs, pkg.DisplayName)
 			}
 		}
 	}
