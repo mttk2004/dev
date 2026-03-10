@@ -2,6 +2,7 @@ package system
 
 import (
 	"os/exec"
+	"regexp"
 	"strings"
 )
 
@@ -46,14 +47,24 @@ func GetCommandVersion(cmd string) string {
 	// Extract the first line of the output
 	lines := strings.Split(strings.TrimSpace(string(out)), "\n")
 	if len(lines) > 0 {
-		// Truncate if it's too long to keep the table clean
-		versionStr := lines[0]
-		if len(versionStr) > 40 {
-			return versionStr[:37] + "..."
-		}
-		return versionStr
+		return ParseVersion(lines[0])
 	}
 	return "unknown"
+}
+
+// ParseVersion extracts a clean version string from raw output.
+func ParseVersion(raw string) string {
+	// Match pattern: x.y.z or vx.y.z
+	re := regexp.MustCompile(`v?(\d+\.\d+[\.\d]*)`)
+	if m := re.FindString(raw); m != "" {
+		return m
+	}
+
+	// Fallback truncation if no standard version format is found
+	if len(raw) > 20 {
+		return raw[:17] + "..."
+	}
+	return raw
 }
 
 // GetPackageManager returns the best available package manager for Arch Linux.

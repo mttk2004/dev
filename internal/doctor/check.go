@@ -89,9 +89,9 @@ func (r Report) Print() {
 			// Set maximum widths for columns to ensure they wrap properly instead of overflowing
 			switch col {
 			case 2: // VERSION
-				style = style.Width(20)
+				style = style.Width(15)
 			case 3: // WHICH
-				style = style.Foreground(lipgloss.Color("240")).Width(25)
+				style = style.Foreground(lipgloss.Color("240")).Width(30)
 			case 4: // DETAILS
 				style = style.Width(35)
 			}
