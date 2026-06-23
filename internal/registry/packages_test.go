@@ -395,7 +395,7 @@ func TestGetPath_KnownCommand(t *testing.T) {
 	pkg := Package{CheckCmd: "bash"}
 	path := pkg.GetPath()
 	if path == "" {
-		t.Error("GetPath() = \"\" for sh, want non-empty absolute path")
+		t.Error("GetPath() = \"\" for bash, want non-empty absolute path")
 	}
 	if len(path) > 0 && path[0] != '/' {
 		t.Errorf("GetPath() = %q, want absolute path starting with /", path)
