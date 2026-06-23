@@ -256,14 +256,14 @@ func TestIDs_ReturnsCopy(t *testing.T) {
 // ---------------------------------------------------------------------------
 
 func TestDiagnosticMessage_InstalledSimplePackage(t *testing.T) {
-	// Use a package whose CheckCmd we know exists on any system: "sh"
+	// Use a package whose CheckCmd we know exists on any system: "bash"
 	pkg := Package{
 		ID:       "test-sh",
-		CheckCmd: "sh",
+		CheckCmd: "bash",
 	}
 
 	msg := pkg.DiagnosticMessage()
-	expected := "sh is installed and in PATH"
+	expected := "bash is installed and in PATH"
 	if msg != expected {
 		t.Errorf("DiagnosticMessage() = %q, want %q", msg, expected)
 	}
@@ -273,12 +273,12 @@ func TestDiagnosticMessage_InstalledWithAltCmd(t *testing.T) {
 	// Both primary and alt exist
 	pkg := Package{
 		ID:          "test-dual",
-		CheckCmd:    "sh",
+		CheckCmd:    "bash",
 		AltCheckCmd: "ls",
 	}
 
 	msg := pkg.DiagnosticMessage()
-	expected := "sh and ls are installed and in PATH"
+	expected := "bash and ls are installed and in PATH"
 	if msg != expected {
 		t.Errorf("DiagnosticMessage() = %q, want %q", msg, expected)
 	}
@@ -287,12 +287,12 @@ func TestDiagnosticMessage_InstalledWithAltCmd(t *testing.T) {
 func TestDiagnosticMessage_InstalledButAltMissing(t *testing.T) {
 	pkg := Package{
 		ID:          "test-partial",
-		CheckCmd:    "sh",
+		CheckCmd:    "bash",
 		AltCheckCmd: "this_does_not_exist_xyz_987",
 	}
 
 	msg := pkg.DiagnosticMessage()
-	expected := "sh is installed, but this_does_not_exist_xyz_987 is not in PATH. Try restarting your terminal."
+	expected := "bash is installed, but this_does_not_exist_xyz_987 is not in PATH. Try restarting your terminal."
 	if msg != expected {
 		t.Errorf("DiagnosticMessage() = %q, want %q", msg, expected)
 	}
@@ -316,7 +316,7 @@ func TestDiagnosticMessage_NotInstalled(t *testing.T) {
 // ---------------------------------------------------------------------------
 
 func TestIsInstalled_Exists(t *testing.T) {
-	pkg := Package{CheckCmd: "sh"}
+	pkg := Package{CheckCmd: "bash"}
 	if !pkg.IsInstalled() {
 		t.Error("IsInstalled() = false for 'sh', want true")
 	}
@@ -334,7 +334,7 @@ func TestIsInstalled_NotExists(t *testing.T) {
 // ---------------------------------------------------------------------------
 
 func TestIsFullyOperational_SimpleInstalled(t *testing.T) {
-	pkg := Package{CheckCmd: "sh"}
+	pkg := Package{CheckCmd: "bash"}
 	if !pkg.IsFullyOperational() {
 		t.Error("IsFullyOperational() = false for 'sh' (no AltCheckCmd), want true")
 	}
@@ -348,14 +348,14 @@ func TestIsFullyOperational_NotInstalled(t *testing.T) {
 }
 
 func TestIsFullyOperational_PrimaryOK_AltOK(t *testing.T) {
-	pkg := Package{CheckCmd: "sh", AltCheckCmd: "ls"}
+	pkg := Package{CheckCmd: "bash", AltCheckCmd: "ls"}
 	if !pkg.IsFullyOperational() {
 		t.Error("IsFullyOperational() = false when both sh and ls exist, want true")
 	}
 }
 
 func TestIsFullyOperational_PrimaryOK_AltMissing(t *testing.T) {
-	pkg := Package{CheckCmd: "sh", AltCheckCmd: "this_does_not_exist_xyz_alt"}
+	pkg := Package{CheckCmd: "bash", AltCheckCmd: "this_does_not_exist_xyz_alt"}
 	if pkg.IsFullyOperational() {
 		t.Error("IsFullyOperational() = true when alt command missing, want false")
 	}
@@ -373,8 +373,8 @@ func TestIsFullyOperational_PrimaryMissing_AltExists(t *testing.T) {
 // ---------------------------------------------------------------------------
 
 func TestGetVersion_KnownCommand(t *testing.T) {
-	// "sh" should return *something* that isn't empty
-	pkg := Package{CheckCmd: "sh"}
+	// "bash" should return *something* that isn't empty
+	pkg := Package{CheckCmd: "bash"}
 	ver := pkg.GetVersion()
 	if ver == "" {
 		t.Error("GetVersion() = \"\" for sh, want non-empty")
@@ -383,7 +383,7 @@ func TestGetVersion_KnownCommand(t *testing.T) {
 
 func TestGetVersion_PrefersAltCmd(t *testing.T) {
 	// When AltCheckCmd is set and exists, GetVersion should use it
-	pkg := Package{CheckCmd: "sh", AltCheckCmd: "ls"}
+	pkg := Package{CheckCmd: "bash", AltCheckCmd: "ls"}
 	ver := pkg.GetVersion()
 	// We can't assert the exact version, but it should not be empty
 	if ver == "" {
@@ -392,7 +392,7 @@ func TestGetVersion_PrefersAltCmd(t *testing.T) {
 }
 
 func TestGetPath_KnownCommand(t *testing.T) {
-	pkg := Package{CheckCmd: "sh"}
+	pkg := Package{CheckCmd: "bash"}
 	path := pkg.GetPath()
 	if path == "" {
 		t.Error("GetPath() = \"\" for sh, want non-empty absolute path")
@@ -403,7 +403,7 @@ func TestGetPath_KnownCommand(t *testing.T) {
 }
 
 func TestGetPath_PrefersAltCmd(t *testing.T) {
-	pkg := Package{CheckCmd: "sh", AltCheckCmd: "ls"}
+	pkg := Package{CheckCmd: "bash", AltCheckCmd: "ls"}
 	path := pkg.GetPath()
 	if path == "" {
 		t.Error("GetPath() = \"\" when AltCheckCmd exists, want non-empty")
@@ -411,16 +411,16 @@ func TestGetPath_PrefersAltCmd(t *testing.T) {
 }
 
 func TestGetPath_AltMissing_FallsToPrimary(t *testing.T) {
-	pkg := Package{CheckCmd: "sh", AltCheckCmd: "this_does_not_exist_fallback"}
+	pkg := Package{CheckCmd: "bash", AltCheckCmd: "this_does_not_exist_fallback"}
 	path := pkg.GetPath()
-	// Should fall back to "sh" path
+	// Should fall back to "bash" path
 	if path == "" {
 		t.Error("GetPath() = \"\" when AltCheckCmd missing, should fallback to primary")
 	}
 }
 
 func TestGetVersion_AltMissing_FallsToPrimary(t *testing.T) {
-	pkg := Package{CheckCmd: "sh", AltCheckCmd: "this_does_not_exist_fallback"}
+	pkg := Package{CheckCmd: "bash", AltCheckCmd: "this_does_not_exist_fallback"}
 	ver := pkg.GetVersion()
 	if ver == "" {
 		t.Error("GetVersion() = \"\" when AltCheckCmd missing, should fallback to primary")
