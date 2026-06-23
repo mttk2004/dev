@@ -112,8 +112,8 @@ func TestCommandExists(t *testing.T) {
 		cmd    string
 		exists bool
 	}{
-		// These should always exist on any Linux system
-		{"sh exists", "bash", true},
+		// These should exist on Arch Linux (the project's target environment)
+		{"bash exists", "bash", true},
 		{"ls exists", "ls", true},
 		// These should never exist
 		{"nonexistent command", "this_command_definitely_does_not_exist_xyz_abc_123", false},
