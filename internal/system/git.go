@@ -12,14 +12,14 @@ import (
 func SetupGitAndSSH(name, email string) (string, error) {
 	// Configure git user.name
 	cmd := exec.Command("git", "config", "--global", "user.name", name)
-	if err := cmd.Run(); err != nil {
-		return "", fmt.Errorf("failed to set git user.name: %w", err)
+	if out, err := cmd.CombinedOutput(); err != nil {
+		return "", fmt.Errorf("failed to set git user.name: %w: %s", err, string(out))
 	}
 
 	// Configure git user.email
 	cmd = exec.Command("git", "config", "--global", "user.email", email)
-	if err := cmd.Run(); err != nil {
-		return "", fmt.Errorf("failed to set git user.email: %w", err)
+	if out, err := cmd.CombinedOutput(); err != nil {
+		return "", fmt.Errorf("failed to set git user.email: %w: %s", err, string(out))
 	}
 
 	// Setup SSH key
