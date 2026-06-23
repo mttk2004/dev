@@ -155,7 +155,7 @@ func TestGetCommandVersion(t *testing.T) {
 	// "bash" should return something (not panic)
 	ver := GetCommandVersion("bash")
 	if ver == "" {
-		t.Error("GetCommandVersion(\"sh\") = \"\", want non-empty string")
+		t.Error("GetCommandVersion(\"bash\") = \"\", want non-empty string")
 	}
 
 	// A nonexistent command should return "unknown"
