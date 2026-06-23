@@ -256,7 +256,7 @@ func TestIDs_ReturnsCopy(t *testing.T) {
 // ---------------------------------------------------------------------------
 
 func TestDiagnosticMessage_InstalledSimplePackage(t *testing.T) {
-	// Use a package whose CheckCmd we know exists on any system: "bash"
+	// Use a package whose CheckCmd we know exists on Arch Linux systems: "bash"
 	pkg := Package{
 		ID:       "test-sh",
 		CheckCmd: "bash",
