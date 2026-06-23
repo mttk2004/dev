@@ -2,6 +2,7 @@ package tui
 
 import (
 	"fmt"
+	"strings"
 
 	"dev/internal/system"
 	"dev/internal/ui"
@@ -72,6 +73,9 @@ func RunGitConfig() bool {
 	if err != nil {
 		return false // Aborted
 	}
+
+	name = strings.TrimSpace(name)
+	email = strings.TrimSpace(email)
 
 	if name == "" || email == "" {
 		ui.Warning("Name and Email cannot be empty.")
