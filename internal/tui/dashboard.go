@@ -14,6 +14,7 @@ const (
 	ActionSearch    DashboardAction = "search"
 	ActionServices  DashboardAction = "services"
 	ActionScaffold  DashboardAction = "scaffold"
+	ActionConfig    DashboardAction = "config"
 	ActionExit      DashboardAction = "exit"
 )
 
@@ -33,6 +34,7 @@ func RunDashboard() (DashboardAction, error) {
 					huh.NewOption("🔍 Search for a package", ActionSearch),
 					huh.NewOption("⚙️  Manage Services", ActionServices),
 					huh.NewOption("✨ Create New Project", ActionScaffold),
+					huh.NewOption("🔧 Configuration", ActionConfig),
 					huh.NewOption("🚪 Exit", ActionExit),
 				).
 				Value(&action),

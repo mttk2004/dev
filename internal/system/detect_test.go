@@ -113,7 +113,7 @@ func TestCommandExists(t *testing.T) {
 		exists bool
 	}{
 		// These should always exist on any Linux system
-		{"sh exists", "sh", true},
+		{"sh exists", "bash", true},
 		{"ls exists", "ls", true},
 		// These should never exist
 		{"nonexistent command", "this_command_definitely_does_not_exist_xyz_abc_123", false},
@@ -132,7 +132,7 @@ func TestCommandExists(t *testing.T) {
 
 func TestGetCommandPath(t *testing.T) {
 	// A command that exists should return a non-empty absolute path
-	path := GetCommandPath("sh")
+	path := GetCommandPath("bash")
 	if path == "" {
 		t.Error("GetCommandPath(\"sh\") = \"\", want non-empty path")
 	}
@@ -152,8 +152,8 @@ func TestGetCommandVersion(t *testing.T) {
 	// We can't predict exact output, but we can verify it doesn't panic
 	// and returns something for known commands
 
-	// "sh" should return something (not panic)
-	ver := GetCommandVersion("sh")
+	// "bash" should return something (not panic)
+	ver := GetCommandVersion("bash")
 	if ver == "" {
 		t.Error("GetCommandVersion(\"sh\") = \"\", want non-empty string")
 	}

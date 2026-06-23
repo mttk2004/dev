@@ -71,6 +71,8 @@ func handleAction(action tui.DashboardAction, choices []string) bool {
 		return tui.RunSearchAction()
 	case tui.ActionServices:
 		return tui.RunServiceAction()
+	case tui.ActionConfig:
+		return tui.RunConfigAction()
 	case tui.ActionScaffold:
 		return tui.RunScaffoldAction()
 	case tui.ActionExit:
