@@ -134,11 +134,11 @@ func TestGetCommandPath(t *testing.T) {
 	// A command that exists should return a non-empty absolute path
 	path := GetCommandPath("bash")
 	if path == "" {
-		t.Error("GetCommandPath(\"sh\") = \"\", want non-empty path")
+		t.Error("GetCommandPath(\"bash\") = \"\", want non-empty path")
 	}
 	// Path should be absolute (starts with /)
 	if len(path) > 0 && path[0] != '/' {
-		t.Errorf("GetCommandPath(\"sh\") = %q, want absolute path starting with /", path)
+		t.Errorf("GetCommandPath(\"bash\") = %q, want absolute path starting with /", path)
 	}
 
 	// A command that doesn't exist should return empty string
