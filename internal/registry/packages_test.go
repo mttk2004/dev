@@ -377,7 +377,7 @@ func TestGetVersion_KnownCommand(t *testing.T) {
 	pkg := Package{CheckCmd: "bash"}
 	ver := pkg.GetVersion()
 	if ver == "" {
-		t.Error("GetVersion() = \"\" for sh, want non-empty")
+		t.Error("GetVersion() = \"\" for bash, want non-empty")
 	}
 }
 
