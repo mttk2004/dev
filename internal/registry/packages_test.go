@@ -350,7 +350,7 @@ func TestIsFullyOperational_NotInstalled(t *testing.T) {
 func TestIsFullyOperational_PrimaryOK_AltOK(t *testing.T) {
 	pkg := Package{CheckCmd: "bash", AltCheckCmd: "ls"}
 	if !pkg.IsFullyOperational() {
-		t.Error("IsFullyOperational() = false when both sh and ls exist, want true")
+		t.Error("IsFullyOperational() = false when both bash and ls exist, want true")
 	}
 }
 
