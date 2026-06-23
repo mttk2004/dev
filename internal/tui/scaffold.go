@@ -44,11 +44,7 @@ func RunScaffoldPrompt() (scaffold.ProjectType, string, string, error) {
 						return nil // Current directory is always safe
 					}
 
-					// Reject obvious traversal patterns early for better UX
 					cleaned := filepath.Clean(dir)
-					if strings.HasPrefix(cleaned, "..") {
-						return errors.New("path cannot traverse above current directory with '..'")
-					}
 
 					// Full validation against safe base dirs
 					abs, err := filepath.Abs(cleaned)
