@@ -10,6 +10,10 @@
 - **Smart Diagnostics:** Instantly see installed tools, their versions, paths, and `$PATH` misconfigurations in a beautiful auto-sizing table.
 - **Package Management:** Install, update, or uninstall dev tools using a keyboard-driven checklist. Automatically detects and uses AUR helpers (`yay` or `paru`) if available.
 - **JDK Version Manager:** View installed JDK versions, easily switch the active default version (via `archlinux-java`), uninstall unused ones, and install new versions with smart recommendations based on the project files (Maven, Gradle, etc.) detected in your current working directory.
+- **Developer Cache Cleaner:** Scan and clean system package caches (pacman, yay, paru), Composer cache, Gradle/Maven build repositories, and recursively search and delete local `node_modules` folders.
+- **Docker Container Dashboard:** List local docker containers, view status/logs, and start, stop, or restart containerized databases or tools.
+- **Local Domain Manager:** View and manage custom local domains mapped to loopback addresses in `/etc/hosts`.
+- **Shell Alias Manager:** List, add, or remove custom command shortcuts (aliases) in your `~/.zshrc` directly from the dashboard.
 - **Service Manager:** Start, stop, enable, or disable background services (`systemctl`) like Docker or PostgreSQL directly from the UI.
 - **Project Scaffolding:** Spin up new projects in seconds (Next.js, React, Vue, Express, Laravel, Django, Spring Boot, Go API) with automated dependency isolation.
 - **Automated `$PATH`:** Automatically injects necessary environment variables into your `~/.zshrc`.
@@ -48,11 +52,15 @@ dev
 From the interactive menu, you can navigate using your arrow keys and `Enter` to:
 1. **📦 Install packages** (Smartly filters out already installed tools).
 2. **🔄 Update packages** (Updates Arch packages & standalone tools).
-3. **🧹 Uninstall / Clean packages**
+3. **🧹 Uninstall packages**
 4. **☕ Manage JDK Versions** (Switch active JDK version, install recommended versions, or uninstall unused versions).
-5. **🔍 Search for a package** (Queries Pacman/AUR directly).
-6. **⚙️ Manage Services** (Toggle running states of local databases & servers).
-7. **✨ Create New Project** (Scaffold boilerplate for 9+ different frameworks).
+5. **🧼 Clean Dev Caches** (Scan and clean pacman/yay, composer, gradle, maven build caches, and node_modules).
+6. **🐳 Manage Docker Containers** (Monitor status, view logs, start, stop, or restart local containers).
+7. **🌐 Manage Local Domains** (Add/remove local loopback host redirects in /etc/hosts).
+8. **🔗 Manage Shell Aliases** (Edit command aliases in ~/.zshrc).
+9. **🔍 Search for a package** (Queries Pacman/AUR directly).
+10. **⚙️ Manage Services** (Toggle running states of local databases & servers).
+11. **✨ Create New Project** (Scaffold boilerplate for 9+ different frameworks).
 
 ## 📂 Project Structure
 
