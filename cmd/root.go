@@ -71,6 +71,8 @@ func handleAction(action tui.DashboardAction, choices []string) bool {
 		return tui.RunJDKAction()
 	case tui.ActionClean:
 		return tui.RunCleanAction()
+	case tui.ActionDocker:
+		return tui.RunDockerAction()
 	case tui.ActionSearch:
 		return tui.RunSearchAction()
 	case tui.ActionServices:

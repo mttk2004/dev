@@ -13,6 +13,7 @@ const (
 	ActionUninstall DashboardAction = "uninstall"
 	ActionJDK       DashboardAction = "jdk"
 	ActionClean     DashboardAction = "clean"
+	ActionDocker    DashboardAction = "docker"
 	ActionSearch    DashboardAction = "search"
 	ActionServices  DashboardAction = "services"
 	ActionScaffold  DashboardAction = "scaffold"
@@ -35,6 +36,7 @@ func RunDashboard() (DashboardAction, error) {
 					huh.NewOption("🧹 Uninstall packages", ActionUninstall),
 					huh.NewOption("☕ Manage JDK Versions", ActionJDK),
 					huh.NewOption("🧼 Clean Dev Caches", ActionClean),
+					huh.NewOption("🐳 Manage Docker Containers", ActionDocker),
 					huh.NewOption("🔍 Search for a package", ActionSearch),
 					huh.NewOption("⚙️  Manage Services", ActionServices),
 					huh.NewOption("✨ Create New Project", ActionScaffold),
