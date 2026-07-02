@@ -65,7 +65,7 @@ func RunSelector(action string, choices []string) ([]string, error) {
 		title := fmt.Sprintf("📦 Select packages to %s", action)
 		fields = append(fields, huh.NewMultiSelect[string]().
 			Title(title).
-			Description("Use Up/Down arrows to navigate, Space to select, Enter to confirm.").
+			Description("Use Up/Down arrows to navigate, Space to select, Enter to confirm. Press Esc to go back.").
 			Options(availableOptions...).
 			Value(&selected))
 	} else {

@@ -31,7 +31,7 @@ func RunDashboard() (DashboardAction, error) {
 		huh.NewGroup(
 			huh.NewSelect[DashboardAction]().
 				Title("🛠️  Main Menu").
-				Description("Choose an action to manage your web dev environment").
+				Description("Use Up/Down arrows to navigate, Enter to confirm. Press Esc to exit.").
 				Options(
 					huh.NewOption("📦 Install packages", ActionInstall),
 					huh.NewOption("🔄 Update packages", ActionUpdate),
@@ -70,7 +70,7 @@ func RunSearchPrompt() (string, error) {
 		huh.NewGroup(
 			huh.NewInput().
 				Title("🔍 Search Package").
-				Description("Enter a package name to search in Arch Linux repositories").
+				Description("Enter a package name to search. Press Enter to confirm, Esc to go back.").
 				Placeholder("e.g. neovim, tmux, apache...").
 				Value(&query),
 		),

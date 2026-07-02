@@ -21,7 +21,7 @@ func RunConfigAction() bool {
 		huh.NewGroup(
 			huh.NewSelect[string]().
 				Title("🔧 Configuration").
-				Description("Select an aspect to configure").
+				Description("Use Up/Down arrows to navigate, Enter to confirm. Press Esc to go back.").
 				Options(
 					huh.NewOption("Git Configuration", "git"),
 					huh.NewOption("🚪 Back to Main Menu", "back"),
@@ -61,6 +61,7 @@ func RunGitConfig() bool {
 			huh.NewGroup(
 				huh.NewConfirm().
 					Title(fmt.Sprintf("Git & SSH đã được cấu hình trước đó.\n(Name: %s, Email: %s)\nBạn có muốn cấu hình lại không?", sysName, sysEmail)).
+					Description("Press Enter to confirm, Esc to cancel.").
 					Value(&confirm),
 			),
 		).WithTheme(huh.ThemeCatppuccin())
@@ -96,11 +97,11 @@ func RunGitConfig() bool {
 		huh.NewGroup(
 			huh.NewInput().
 				Title("Git User Name").
-				Description("Enter your full name for git commits").
+				Description("Enter your full name for git commits. Press Enter to confirm, Esc to go back.").
 				Value(&name),
 			huh.NewInput().
 				Title("Git User Email").
-				Description("Enter your email address for git commits and SSH key").
+				Description("Enter your email address for git commits and SSH key. Press Enter to confirm, Esc to go back.").
 				Value(&email),
 		),
 	).WithTheme(huh.ThemeCatppuccin())

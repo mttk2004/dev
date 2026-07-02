@@ -38,7 +38,7 @@ func RunCleanAction() bool {
 		huh.NewGroup(
 			huh.NewMultiSelect[string]().
 				Title("Select items to clean").
-				Description("Space to select, Enter to confirm. Press Esc to go back.").
+				Description("Use Up/Down arrows to navigate, Space to select, Enter to confirm. Press Esc to go back.").
 				Options(options...).
 				Value(&selected),
 		),
@@ -87,7 +87,7 @@ func RunCleanAction() bool {
 					huh.NewGroup(
 						huh.NewMultiSelect[string]().
 							Title("Select node_modules to delete").
-							Description("Space to select, Enter to confirm. Press Esc to cancel.").
+							Description("Use Up/Down arrows to navigate, Space to select, Enter to confirm. Press Esc to go back.").
 							Options(nodeOptions...).
 							Value(&nodeSelected),
 					),

@@ -61,7 +61,7 @@ func RunServiceManager() error {
 			huh.NewGroup(
 				huh.NewSelect[string]().
 					Title("⚙️  Manage Services").
-					Description("Select a service to change its state").
+					Description("Use Up/Down arrows to navigate, Enter to confirm. Press Esc to go back.").
 					Options(options...).
 					Value(&selectedService),
 			),
@@ -81,6 +81,7 @@ func RunServiceManager() error {
 			huh.NewGroup(
 				huh.NewSelect[string]().
 					Title(fmt.Sprintf("⚙️  Action for %s", selectedService)).
+					Description("Use Up/Down arrows to navigate, Enter to confirm. Press Esc to go back.").
 					Options(
 						huh.NewOption("▶️  Start", "start"),
 						huh.NewOption("⏹️  Stop", "stop"),

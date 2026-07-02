@@ -46,6 +46,7 @@ func RunAliasesAction() bool {
 			huh.NewGroup(
 				huh.NewSelect[aliasesAction]().
 					Title("Select an action").
+					Description("Use Up/Down arrows to navigate, Enter to confirm. Press Esc to go back.").
 					Options(
 						huh.NewOption("➕ Add a new alias", aliasesActionAdd),
 						huh.NewOption("➖ Remove an alias", aliasesActionRemove),
@@ -77,11 +78,11 @@ func handleAddAlias() {
 		huh.NewGroup(
 			huh.NewInput().
 				Title("Enter alias shortcut name").
-				Description("e.g. gco, art, dps").
+				Description("e.g. gco, art, dps. Press Enter to confirm, Esc to go back.").
 				Value(&name),
 			huh.NewInput().
 				Title("Enter alias command value").
-				Description("e.g. git checkout, php artisan, docker ps").
+				Description("e.g. git checkout, php artisan, docker ps. Press Enter to confirm, Esc to go back.").
 				Value(&value),
 		),
 	).WithTheme(huh.ThemeCatppuccin())
@@ -115,6 +116,7 @@ func handleRemoveAlias(list []aliases.Alias) {
 		huh.NewGroup(
 			huh.NewSelect[string]().
 				Title("Select alias to remove").
+				Description("Use Up/Down arrows to navigate, Enter to confirm. Press Esc to go back.").
 				Options(options...).
 				Value(&selected),
 		),

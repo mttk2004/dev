@@ -46,6 +46,7 @@ func RunHostsAction() bool {
 			huh.NewGroup(
 				huh.NewSelect[hostsAction]().
 					Title("Select an action").
+					Description("Use Up/Down arrows to navigate, Enter to confirm. Press Esc to go back.").
 					Options(
 						huh.NewOption("➕ Add new local domain", hostsActionAdd),
 						huh.NewOption("➖ Remove a local domain", hostsActionRemove),
@@ -75,7 +76,7 @@ func handleAddDomain() {
 		huh.NewGroup(
 			huh.NewInput().
 				Title("Enter new local domain name").
-				Description("e.g. my-app.local, api.test").
+				Description("e.g. my-app.local, api.test. Press Enter to confirm, Esc to go back.").
 				Value(&domain),
 		),
 	).WithTheme(huh.ThemeCatppuccin())
@@ -107,6 +108,7 @@ func handleRemoveDomain(domains []hosts.HostEntry) {
 		huh.NewGroup(
 			huh.NewSelect[string]().
 				Title("Select local domain to remove").
+				Description("Use Up/Down arrows to navigate, Enter to confirm. Press Esc to go back.").
 				Options(options...).
 				Value(&selected),
 		),

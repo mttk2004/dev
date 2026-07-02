@@ -54,6 +54,7 @@ func RunJDKAction() bool {
 			huh.NewGroup(
 				huh.NewSelect[jdkActionType]().
 					Title("Choose an action").
+					Description("Use Up/Down arrows to navigate, Enter to confirm. Press Esc to go back.").
 					Options(
 						huh.NewOption("🔄 Switch default JDK version", jdkActionSwitch),
 						huh.NewOption("📥 Install new JDK version", jdkActionInstall),
@@ -107,7 +108,7 @@ func handleSwitchJDK(installed []jdk.JDKStatus) {
 		huh.NewGroup(
 			huh.NewSelect[string]().
 				Title("Select default JDK version").
-				Description("This will update the default java environment symlinks").
+				Description("Use Up/Down arrows to navigate, Enter to confirm. Press Esc to go back.").
 				Options(options...).
 				Value(&target),
 		),
@@ -190,7 +191,7 @@ func handleInstallJDK(installed []jdk.JDKStatus) {
 		huh.NewGroup(
 			huh.NewSelect[string]().
 				Title("Select a JDK version to install").
-				Description("Suggested versions are marked with ⭐").
+				Description("Suggested versions are marked with ⭐. Use Up/Down arrows to navigate, Enter to confirm. Press Esc to go back.").
 				Options(options...).
 				Value(&selectedPkg),
 		),
@@ -227,6 +228,7 @@ func handleInstallJDK(installed []jdk.JDKStatus) {
 				huh.NewGroup(
 					huh.NewConfirm().
 						Title(fmt.Sprintf("Would you like to set %s as the default JDK version?", newEnv)).
+						Description("Press Enter to confirm, Esc to cancel.").
 						Value(&confirm),
 				),
 			).WithTheme(huh.ThemeCatppuccin())
@@ -265,7 +267,7 @@ func handleUninstallJDK(installed []jdk.JDKStatus) {
 		huh.NewGroup(
 			huh.NewMultiSelect[string]().
 				Title("Select JDK version(s) to uninstall").
-				Description("Space to select, Enter to confirm. Press Esc or Enter with no selection to go back.").
+				Description("Use Up/Down arrows to navigate, Space to select, Enter to confirm. Press Esc or Enter with no selection to go back.").
 				Options(options...).
 				Value(&selected),
 		),
@@ -297,6 +299,7 @@ func handleUninstallJDK(installed []jdk.JDKStatus) {
 			huh.NewGroup(
 				huh.NewConfirm().
 					Title(title).
+					Description("Press Enter to confirm, Esc to cancel.").
 					Value(&confirm),
 			),
 		).WithTheme(huh.ThemeCatppuccin())

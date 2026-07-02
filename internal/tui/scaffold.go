@@ -22,6 +22,7 @@ func RunScaffoldPrompt() (scaffold.ProjectType, string, string, error) {
 		huh.NewGroup(
 			huh.NewSelect[scaffold.ProjectType]().
 				Title("✨ Choose a project template").
+				Description("Use Up/Down arrows to navigate, Enter to confirm. Press Esc to go back.").
 				Options(
 					huh.NewOption("Next.js (React Framework via Bun)", scaffold.ProjectNextJS),
 					huh.NewOption("React Router (via npx)", scaffold.ProjectReactRouter),
@@ -36,7 +37,7 @@ func RunScaffoldPrompt() (scaffold.ProjectType, string, string, error) {
 				Value(&pType),
 			huh.NewInput().
 				Title("📂 Parent Directory").
-				Description("Where should the project be created? (Leave blank for current directory)").
+				Description("Where should the project be created? (Leave blank for current directory). Press Enter to confirm, Esc to go back.").
 				Placeholder(".").
 				Validate(func(s string) error {
 					dir := strings.TrimSpace(s)
@@ -62,7 +63,7 @@ func RunScaffoldPrompt() (scaffold.ProjectType, string, string, error) {
 				Value(&pDir),
 			huh.NewInput().
 				Title("📁 Project Name").
-				Description("Enter the name of your new project (will create a directory)").
+				Description("Enter the name of your new project (will create a directory). Press Enter to confirm, Esc to go back.").
 				Validate(func(s string) error {
 					if strings.TrimSpace(s) == "" {
 						return errors.New("project name cannot be empty")

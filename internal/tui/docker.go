@@ -42,6 +42,7 @@ func RunDockerAction() bool {
 			huh.NewGroup(
 				huh.NewConfirm().
 					Title("Would you like to start the Docker systemd service?").
+					Description("Press Enter to confirm, Esc to cancel.").
 					Value(&startService),
 			),
 		).WithTheme(huh.ThemeCatppuccin())
@@ -96,6 +97,7 @@ func RunDockerAction() bool {
 			huh.NewGroup(
 				huh.NewSelect[string]().
 					Title("Select a container to manage").
+					Description("Use Up/Down arrows to navigate, Enter to confirm. Press Esc to go back.").
 					Options(options...).
 					Value(&selectedID),
 			),
@@ -137,6 +139,7 @@ func handleContainerOps(c docker.Container) {
 			huh.NewGroup(
 				huh.NewSelect[containerAction]().
 					Title("Choose action").
+					Description("Use Up/Down arrows to navigate, Enter to confirm. Press Esc to go back.").
 					Options(options...).
 					Value(&action),
 			),
