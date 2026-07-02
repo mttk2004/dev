@@ -9,6 +9,7 @@
 - **One-Command Dashboard:** Run `dev` to open a centralized control panel for your entire dev machine.
 - **Smart Diagnostics:** Instantly see installed tools, their versions, paths, and `$PATH` misconfigurations in a beautiful auto-sizing table.
 - **Package Management:** Install, update, or uninstall dev tools using a keyboard-driven checklist. Automatically detects and uses AUR helpers (`yay` or `paru`) if available.
+- **JDK Version Manager:** View installed JDK versions, easily switch the active default version (via `archlinux-java`), uninstall unused ones, and install new versions with smart recommendations based on the project files (Maven, Gradle, etc.) detected in your current working directory.
 - **Service Manager:** Start, stop, enable, or disable background services (`systemctl`) like Docker or PostgreSQL directly from the UI.
 - **Project Scaffolding:** Spin up new projects in seconds (Next.js, React, Vue, Express, Laravel, Django, Spring Boot, Go API) with automated dependency isolation.
 - **Automated `$PATH`:** Automatically injects necessary environment variables into your `~/.zshrc`.
@@ -48,9 +49,10 @@ From the interactive menu, you can navigate using your arrow keys and `Enter` to
 1. **📦 Install packages** (Smartly filters out already installed tools).
 2. **🔄 Update packages** (Updates Arch packages & standalone tools).
 3. **🧹 Uninstall / Clean packages**
-4. **🔍 Search for a package** (Queries Pacman/AUR directly).
-5. **⚙️ Manage Services** (Toggle running states of local databases & servers).
-6. **✨ Create New Project** (Scaffold boilerplate for 9+ different frameworks).
+4. **☕ Manage JDK Versions** (Switch active JDK version, install recommended versions, or uninstall unused versions).
+5. **🔍 Search for a package** (Queries Pacman/AUR directly).
+6. **⚙️ Manage Services** (Toggle running states of local databases & servers).
+7. **✨ Create New Project** (Scaffold boilerplate for 9+ different frameworks).
 
 ## 📂 Project Structure
 

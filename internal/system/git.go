@@ -5,7 +5,17 @@ import (
 	"os"
 	"os/exec"
 	"path/filepath"
+	"strings"
 )
+
+// GetGlobalGitConfig returns the currently configured global git user.name and user.email.
+func GetGlobalGitConfig() (string, string) {
+	nameCmd := exec.Command("git", "config", "--global", "user.name")
+	nameOut, _ := nameCmd.Output()
+	emailCmd := exec.Command("git", "config", "--global", "user.email")
+	emailOut, _ := emailCmd.Output()
+	return strings.TrimSpace(string(nameOut)), strings.TrimSpace(string(emailOut))
+}
 
 // SetupGitAndSSH sets up global git config and ensures an SSH key exists.
 // Returns the public SSH key string.
@@ -37,7 +47,9 @@ func SetupGitAndSSH(name, email string) (string, error) {
 	pubKeyPath := privKeyPath + ".pub"
 
 	// Ensure SSH keypair exists
-	if _, err := os.Stat(privKeyPath); err != nil {
+	if _, err := os.Stat(privKeyPath); err == nil {
+		fmt.Println("Existing SSH ed25519 key found. Reusing it.")
+	} else {
 		if !os.IsNotExist(err) {
 			return "", fmt.Errorf("could not stat SSH private key: %w", err)
 		}

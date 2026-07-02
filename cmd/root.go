@@ -67,6 +67,8 @@ func handleAction(action tui.DashboardAction, choices []string) bool {
 		return tui.RunUpdateAction(choices)
 	case tui.ActionUninstall:
 		return tui.RunUninstallAction(choices)
+	case tui.ActionJDK:
+		return tui.RunJDKAction()
 	case tui.ActionSearch:
 		return tui.RunSearchAction()
 	case tui.ActionServices:

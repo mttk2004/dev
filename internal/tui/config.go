@@ -2,6 +2,8 @@ package tui
 
 import (
 	"fmt"
+	"os"
+	"path/filepath"
 	"strings"
 
 	"dev/internal/system"
@@ -42,6 +44,32 @@ func RunConfigAction() bool {
 
 // RunGitConfig handles the Git/SSH setup flow.
 func RunGitConfig() bool {
+	sysName, sysEmail := system.GetGlobalGitConfig()
+
+	// Check if SSH key exists
+	hasSSHKey := false
+	if home, err := os.UserHomeDir(); err == nil {
+		if _, err := os.Stat(filepath.Join(home, ".ssh", "id_ed25519")); err == nil {
+			hasSSHKey = true
+		}
+	}
+
+	// If all are already configured, ask before overwriting
+	if sysName != "" && sysEmail != "" && hasSSHKey {
+		var confirm bool
+		confirmForm := huh.NewForm(
+			huh.NewGroup(
+				huh.NewConfirm().
+					Title(fmt.Sprintf("Git & SSH đã được cấu hình trước đó.\n(Name: %s, Email: %s)\nBạn có muốn cấu hình lại không?", sysName, sysEmail)).
+					Value(&confirm),
+			),
+		).WithTheme(huh.ThemeCatppuccin())
+
+		if err := confirmForm.Run(); err != nil || !confirm {
+			return false
+		}
+	}
+
 	cfg, err := system.LoadConfig()
 	if err != nil {
 		ui.Warning("Could not load config: %v", err)
@@ -54,6 +82,14 @@ func RunGitConfig() bool {
 	if cfg != nil {
 		name = cfg.Git.Name
 		email = cfg.Git.Email
+	}
+
+	// Fallback to system-level configuration as default values
+	if name == "" {
+		name = sysName
+	}
+	if email == "" {
+		email = sysEmail
 	}
 
 	form := huh.NewForm(
