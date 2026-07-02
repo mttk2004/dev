@@ -122,11 +122,14 @@ func RunCleanAction() bool {
 				ui.ActionHeader("🧹", "Cleaning", item.Name)
 				var err error
 				if item.ID == "pacman" {
-					// Pacman requires sudo and user input, let's run pacman clean
-					cmd := exec.Command("sudo", "pacman", "-Sc", "--noconfirm")
+					// Clear ALL packages from cache using pacman -Scc
+					cmd := exec.Command("sudo", "pacman", "-Scc", "--noconfirm")
 					cmd.Stdout = os.Stdout
 					cmd.Stderr = os.Stderr
 					err = cmd.Run()
+
+					// Clean up leftover corrupt temp download-* files
+					exec.Command("sudo", "rm", "-f", "/var/cache/pacman/pkg/download-*").Run()
 				} else {
 					err = os.RemoveAll(item.Path)
 				}
