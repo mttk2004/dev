@@ -15,6 +15,7 @@ const (
 	ActionClean     DashboardAction = "clean"
 	ActionDocker    DashboardAction = "docker"
 	ActionHosts     DashboardAction = "hosts"
+	ActionAliases   DashboardAction = "aliases"
 	ActionSearch    DashboardAction = "search"
 	ActionServices  DashboardAction = "services"
 	ActionScaffold  DashboardAction = "scaffold"
@@ -39,6 +40,7 @@ func RunDashboard() (DashboardAction, error) {
 					huh.NewOption("🧼 Clean Dev Caches", ActionClean),
 					huh.NewOption("🐳 Manage Docker Containers", ActionDocker),
 					huh.NewOption("🌐 Manage Local Domains", ActionHosts),
+					huh.NewOption("🔗 Manage Shell Aliases", ActionAliases),
 					huh.NewOption("🔍 Search for a package", ActionSearch),
 					huh.NewOption("⚙️  Manage Services", ActionServices),
 					huh.NewOption("✨ Create New Project", ActionScaffold),

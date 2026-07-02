@@ -75,6 +75,8 @@ func handleAction(action tui.DashboardAction, choices []string) bool {
 		return tui.RunDockerAction()
 	case tui.ActionHosts:
 		return tui.RunHostsAction()
+	case tui.ActionAliases:
+		return tui.RunAliasesAction()
 	case tui.ActionSearch:
 		return tui.RunSearchAction()
 	case tui.ActionServices:
